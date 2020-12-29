@@ -139,7 +139,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="源.cpp" />
+    <ClCompile Include="boss.cpp" />
+    <ClCompile Include="Employee.cpp" />
+    <ClCompile Include="manager.cpp" />
+    <ClCompile Include="worker.cpp" />
+    <ClCompile Include="workerManager.cpp" />
+    <ClCompile Include="职工管理系统.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="boss.h" />
+    <ClInclude Include="employee.h" />
+    <ClInclude Include="manager.h" />
+    <ClInclude Include="wokerManager.h" />
+    <ClInclude Include="worker.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
