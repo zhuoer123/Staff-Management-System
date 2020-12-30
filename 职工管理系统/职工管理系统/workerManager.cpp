@@ -4,7 +4,7 @@ using namespace std;
 
 WorkerManager::WorkerManager()
 {
-	//文件不存在
+	//1.文件不存在
 	ifstream ifs;
 	ifs.open(FILENAME, ios::in); //读文件
 
@@ -24,7 +24,7 @@ WorkerManager::WorkerManager()
 		return;
 	}
 
-	//文件为空
+	//2.文件为空
 	char ch;
 	ifs >> ch;
 	if (ifs.eof())
@@ -43,7 +43,7 @@ WorkerManager::WorkerManager()
 		return;
 	}
 
-	//文件存在 并记录人数
+	//3.文件存在 并记录人数
 	int num = this->get_EmpNum();
 	cout << "职工个数为：" << num << endl;
 	//更新成员属性
@@ -265,6 +265,148 @@ void WorkerManager::Show_EMP()
 		{
 			this->m_EmpArray[i]->showInfo();
 		}
+	}
+
+	system("pause");
+	system("cls");
+}
+
+//判断职工是否存在 如果存在，返回职工所在数组中的位置，不存在返回-1
+int WorkerManager::IsExist(int id)
+{
+	int index = -1; //初始化为 不存在
+	for (int i = 0; i < this->m_EmpNum; i++)
+	{
+		if (this->m_EmpArray[i]->m_Id == id)
+		{
+			//找到这个员工
+			index = i;
+			break;
+		}
+	
+	}
+	return index;
+}
+
+//删除职工
+void WorkerManager::Del_EMP()
+{
+	if (this->m_FileIsEmpty)
+	{
+		cout << "文件不存在或记录为空" << endl;
+	}
+	else
+	{
+		//按照职工编号删除
+		cout << "请输入想要删除的职工编号：" << endl;
+		int id = 0;
+		cin >> id;
+
+		int index = this->IsExist(id);
+
+		if (index != -1) //职工存在
+		{
+			for (int i = index; i < this->m_EmpNum - 1; i++)
+			{
+				this->m_EmpArray[i] = this->m_EmpArray[i + 1];
+			}
+			this->m_EmpNum--;
+
+			//数据同步更新到文件中
+			this->save();
+
+			cout << "删除成功" << endl;
+		}
+		else
+		{
+			cout << "删除失败，未找到该职工" << endl;
+		}
+	}
+
+	system("pause");
+	system("cls");
+}
+
+//修改职工
+void WorkerManager::Mod_Emp()
+{
+	if (this->m_FileIsEmpty)
+	{
+		cout << "文件不存在或记录为空" << endl;
+	}
+	else
+	{
+		cout << "请输入修改职工的编号" << endl;
+		int id = 0;
+		cin >> id;
+
+		int ret = this->IsExist(id);
+		if (ret != -1)
+		{
+			delete this->m_EmpArray[ret];
+
+			int newId = 0;
+			string newName = "";
+			int dSelect = 0;
+
+			cout << "查到" << id << "号的职工，请输入新的职工号：" << endl;
+
+			while (1)
+			{
+				cin >> newId;
+				/*int Ret = this->IsExist(newId);
+				cout << Ret << endl;*/
+				if (this->IsExist(newId) != -1)
+				{
+					break;
+				}
+				else
+				{
+					cout << "编号已存在，请重新输入：" << endl;
+				}
+				
+			}
+
+			
+			cout << "请输入新的姓名：" << endl;
+			cin >> newName;
+
+			cout << "请输入岗位：" << endl;
+			cout << "1.普通职工" << endl;
+			cout << "2.经理" << endl;
+			cout << "3.老板" << endl;
+			cin >> dSelect;
+
+			Worker* worker = NULL;
+
+			switch (dSelect)
+			{
+			case 1:
+				worker = new Employee(newId, newName, dSelect);
+				break;
+			case 2:
+				worker = new Manager(newId, newName, dSelect);
+				break;
+			case 3:
+				worker = new Boss(newId, newName, dSelect);
+				break;
+			default:
+				break;
+			}
+
+			//更新数据到数组中
+			this->m_EmpArray[ret] = worker;
+
+			cout << "修改成功" << endl;
+
+			//保存到文件中
+			this->save();
+		}
+		else
+		{
+			cout << "修改失败，查无此人" << endl;
+		}
+
 	}
 
 	system("pause");
