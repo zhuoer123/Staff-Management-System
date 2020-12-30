@@ -351,20 +351,15 @@ void WorkerManager::Mod_Emp()
 
 			cout << "查到" << id << "号的职工，请输入新的职工号：" << endl;
 
+			//防止编号重复
 			while (1)
 			{
 				cin >> newId;
-				/*int Ret = this->IsExist(newId);
-				cout << Ret << endl;*/
-				if (this->IsExist(newId) != -1)
+				if (this->IsExist(newId) == -1)
 				{
 					break;
 				}
-				else
-				{
-					cout << "编号已存在，请重新输入：" << endl;
-				}
-				
+				cout << "编号已存在，请重新输入：" << endl;				
 			}
 
 			
@@ -412,6 +407,169 @@ void WorkerManager::Mod_Emp()
 	system("pause");
 	system("cls");
 }
+
+//查找职工
+void WorkerManager::Find_Emp()
+{
+	if (this->m_FileIsEmpty)
+	{
+		cout << "文件不存在或为空" << endl;
+	}
+	else
+	{
+		cout << "请输入查找方式：" << endl;
+		cout << "1.按成员编号查找" << endl;
+		cout << "2.按姓名查找" << endl;
+
+		int select = 0;
+		cin >> select;
+		
+		if (select == 1)
+		{
+			cout << "请输入要查找的成员编号：" << endl;
+			int Id = 0;
+			cin >> Id;
+
+			int index = this->IsExist(Id);
+			if (index == -1)
+			{
+				cout << "查无此人" << endl;
+			}
+			else
+			{
+				cout << "查找成功，该成员信息如下：" << endl;
+				this->m_EmpArray[index]->showInfo();
+			}
+		}
+		else if (select == 2)
+		{
+			cout << "请输入要查找的成员姓名：" << endl;
+			string name; 
+			cin >> name;
+
+			bool flag = false;  //标志量  存在为 true，不存在为falsse
+
+			for (int i = 0; i < this->m_EmpNum; i++)
+			{
+				if (this->m_EmpArray[i]->m_Name == name)
+				{
+					cout << "查找成功，职工编号"
+						<< this->m_EmpArray[i]->m_Id 
+						<< "的信息如下：" << endl;
+					this->m_EmpArray[i]->showInfo();
+
+					flag = true;
+				}
+			}
+			if (flag == false)
+			{
+				cout << "查无此人" << endl;
+			}
+		}
+		else
+		{
+			cout << "输入有误" << endl;
+		}
+	}
+
+	system("pause");
+	system("cls");
+}
+
+//职工排序
+void WorkerManager::sort_Emp()
+{
+	if (this->m_FileIsEmpty)
+	{
+		cout << "文件不存在或为空" << endl;
+		//system("pause");
+		//system("cls");
+	}
+
+	cout << "请选择排序方式" << endl;
+	cout << "1.按职工编号进行升序" << endl;
+	cout << "2.按职工编号进行降序" << endl;
+
+	int select = 0;
+	cin >> select;
+
+	for (int i = 0; i < this->m_EmpNum; i++)
+	{
+		int minOrmax = i;
+		for (int j = i + 1; j < this->m_EmpNum; j++)
+		{
+			if (select == 1) //升序
+			{
+				if (this->m_EmpArray[minOrmax]->m_Id > this->m_EmpArray[j]->m_Id)
+				{
+					minOrmax = j;
+				}
+			}
+			else  //降序
+			{
+				if (this->m_EmpArray[minOrmax]->m_Id < this->m_EmpArray[j]->m_Id)
+				{
+					minOrmax = j;
+				}
+			}
+		}
+
+		if (i != minOrmax)
+		{
+			Worker* temp = this->m_EmpArray[i];
+			m_EmpArray[i] = m_EmpArray[minOrmax];
+			m_EmpArray[minOrmax] = temp;
+
+		}
+
+	}
+
+	cout << "排序成功！排序后的结果为：" << endl;
+	this->save();
+	this->Show_EMP();
+
+}
+
+//清空
+void WorkerManager::clear_Emp()
+{
+	cout << "确定删除？" << endl;
+	cout << "1.确认" << endl;
+	cout << "2.取消" << endl;
+
+	int select = 0;
+	cin >> select;
+
+	if (select == 1)
+	{
+		ofstream ofs(FILENAME, ios::trunc); //如果存在删除文件并重新创建
+		ofs.close();
+
+		if (this->m_EmpArray != NULL)
+		{
+			for (int i = 0; i < this->m_EmpNum; i++)
+			{
+				if (this->m_EmpArray[i] != NULL)
+				{
+					delete this->m_EmpArray[i];
+				}
+			}
+
+			this->m_EmpNum = 0;
+			delete[] this->m_EmpArray;
+			this->m_EmpArray = NULL;
+			this->m_FileIsEmpty = true;
+		}
+
+		cout << "清空成功！" << endl;
+
+	}
+
+	system("pause");
+	system("cls");
+
+}
+
 
 WorkerManager::~WorkerManager()
 {

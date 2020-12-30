@@ -21,9 +21,6 @@
     <ClCompile Include="职工管理系统.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="worker.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="Employee.cpp">
       <Filter>源文件</Filter>
     </ClCompile>

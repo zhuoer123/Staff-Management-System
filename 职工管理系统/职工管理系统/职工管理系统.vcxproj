@@ -142,7 +142,6 @@
     <ClCompile Include="boss.cpp" />
     <ClCompile Include="Employee.cpp" />
     <ClCompile Include="manager.cpp" />
-    <ClCompile Include="worker.cpp" />
     <ClCompile Include="workerManager.cpp" />
     <ClCompile Include="职工管理系统.cpp" />
   </ItemGroup>
